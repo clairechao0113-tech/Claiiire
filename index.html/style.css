@@ -1,288 +1,559 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+*{
+
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+
 }
+
 
 
 html,
-body {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
+body{
+
+    width:100%;
+    height:100%;
+
+    overflow:hidden;
 
     font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "SF Pro Display",
-        "PingFang TC",
-        "Microsoft JhengHei",
-        sans-serif;
-}
-
-
-/* 背景 */
-
-body {
-    background: #000;
-}
-
-
-#background {
-
-    position: fixed;
-
-    inset: 0;
-
-    background-image: none;
-
-    background-size: cover;
-
-    background-position: center;
-
-    z-index: -1;
-
-}
-
-
-#background::after {
-
-    content: "";
-
-    position: absolute;
-
-    inset: 0;
-
-    background:
-        linear-gradient(
-            rgba(0,0,0,0.15),
-            rgba(0,0,0,0.35)
-        );
+    -apple-system,
+    BlinkMacSystemFont,
+    "SF Pro Display",
+    "PingFang TC",
+    "Microsoft JhengHei",
+    sans-serif;
 
 }
 
 
 
-/* 時間卡 */
+body{
 
-#clockCard {
+    background:#000;
 
-    position: absolute;
-
-    left: 50px;
-
-    top: 120px;
+}
 
 
-    padding: 25px 35px;
 
 
-    min-width: 260px;
+/* =====================
+   背景
+===================== */
 
 
-    color: white;
+#background{
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:-1;
+
+
+    background-size:cover;
+
+    background-position:center;
+
+}
+
+
+
+
+#background::after{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
 
 
     background:
-        rgba(255,255,255,0.18);
-
-
-    backdrop-filter:
-        blur(25px);
-
-
-    -webkit-backdrop-filter:
-        blur(25px);
-
-
-
-    border-radius: 32px;
-
-
-    border:
-        1px solid rgba(255,255,255,0.25);
-
-
-
-    box-shadow:
-        0 20px 50px rgba(0,0,0,0.35);
-
-
-    cursor: grab;
-
-
-    user-select: none;
-
-
-    touch-action: none;
-
-
-    transition:
-        transform .2s ease,
-        box-shadow .2s ease;
+    linear-gradient(
+        rgba(0,0,0,.15),
+        rgba(0,0,0,.35)
+    );
 
 }
 
 
 
-#clockCard:active {
-
-    cursor: grabbing;
-
-    transform: scale(1.04);
-
-}
 
 
+/* =====================
+   時間卡
+===================== */
 
-/* 城市 */
 
-#city {
+#clockCard{
 
-    font-size: 22px;
 
-    opacity: .9;
+    position:absolute;
 
-    margin-bottom: 8px;
 
-}
+    left:50px;
+
+    top:120px;
 
 
 
-/* 時間 */
-
-#time {
-
-    font-size: 72px;
-
-    font-weight: 600;
-
-    letter-spacing: -3px;
-
-    line-height: 1;
-
-}
+    padding:25px 35px;
 
 
 
-/* 日期 */
+    min-width:260px;
 
-#date {
-
-    margin-top: 12px;
-
-    font-size: 20px;
-
-    opacity: .9;
-
-}
-
-
-
-/* 控制按鈕 */
-
-#controlPanel {
-
-    position: fixed;
-
-    right: 25px;
-
-    bottom: 25px;
-
-
-    display: flex;
-
-    gap: 12px;
-
-
-    opacity: 0;
-
-
-    transition:
-        opacity .3s;
-
-}
-
-
-body:hover #controlPanel {
-
-    opacity: 1;
-
-}
-
-
-
-button {
-
-    border: none;
-
-
-    padding: 12px 18px;
-
-
-    border-radius: 20px;
 
 
     color:white;
 
 
+
     background:
-        rgba(255,255,255,.18);
+    rgba(255,255,255,.12);
+
 
 
     backdrop-filter:
-        blur(15px);
+    blur(35px);
+
+
+    -webkit-backdrop-filter:
+    blur(35px);
+
+
+
+    border-radius:32px;
+
+
+
+    border:
+    1px solid rgba(255,255,255,.25);
+
+
+
+    box-shadow:
+    0 20px 50px rgba(0,0,0,.35);
+
+
+
+    cursor:grab;
+
+
+    user-select:none;
+
+
+    touch-action:none;
+
+
+    transform-origin:center;
+
+
+
+}
+
+
+
+
+
+#clockCard:active{
+
+    cursor:grabbing;
+
+}
+
+
+
+
+#city{
+
+    font-size:22px;
+
+    opacity:.9;
+
+    margin-bottom:8px;
+
+}
+
+
+
+
+#time{
+
+    font-size:72px;
+
+    font-weight:600;
+
+    letter-spacing:-3px;
+
+    line-height:1;
+
+}
+
+
+
+
+#date{
+
+    margin-top:12px;
+
+    font-size:20px;
+
+    opacity:.9;
+
+}
+
+
+
+
+
+/* =====================
+   縮放控制點
+===================== */
+
+
+#resizeHandle{
+
+
+    position:absolute;
+
+
+    right:8px;
+
+    bottom:8px;
+
+
+
+    width:22px;
+
+    height:22px;
+
+
+
+    border-radius:50%;
+
+
+
+    background:
+    rgba(255,255,255,.8);
+
+
+
+    cursor:nwse-resize;
+
+
+
+    opacity:0;
+
+
+
+}
+
+
+
+#clockCard:hover #resizeHandle{
+
+    opacity:1;
+
+}
+
+
+
+@media(max-width:600px){
+
+    #resizeHandle{
+
+        opacity:.8;
+
+    }
+
+
+    #clockCard{
+
+
+        left:30px;
+
+        top:120px;
+
+
+        padding:22px 28px;
+
+    }
+
+
+
+    #time{
+
+        font-size:55px;
+
+    }
+
+}
+
+
+
+
+
+
+
+/* =====================
+   設定按鈕
+===================== */
+
+
+#controlPanel{
+
+
+    position:fixed;
+
+
+    right:25px;
+
+    bottom:25px;
+
+
+
+    z-index:9999;
+
+}
+
+
+
+
+#settingsBtn{
+
+
+    width:90px;
+
+    height:45px;
+
+
+
+    border-radius:25px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+
+
+    color:white;
+
+
+
+    font-size:18px;
+
+
+
+    background:
+    rgba(255,255,255,.18);
+
+
+
+    backdrop-filter:
+    blur(20px);
+
+
+
+    border:
+    1px solid rgba(255,255,255,.25);
+
 
 
     cursor:pointer;
 
 
-    font-size:15px;
-
 }
 
 
 
-button:hover {
+
+
+/* =====================
+   設定面板
+===================== */
+
+
+#settingsPanel{
+
+
+    position:absolute;
+
+
+    right:0;
+
+
+    bottom:65px;
+
+
+
+    width:260px;
+
+
+
+    padding:20px;
+
+
+
+    display:flex;
+
+
+    flex-direction:column;
+
+
+    gap:12px;
+
+
+
+    border-radius:28px;
+
+
 
     background:
-        rgba(255,255,255,.3);
+    rgba(255,255,255,.18);
+
+
+
+    backdrop-filter:
+    blur(25px);
+
+
+
+    color:white;
+
+
+
+    opacity:0;
+
+
+    pointer-events:none;
+
+
+
+    transform:
+    translateY(20px)
+    scale(.95);
+
+
+
+    transition:.25s;
 
 }
 
 
 
-#imageInput {
+
+
+#settingsPanel.show{
+
+
+    opacity:1;
+
+
+    pointer-events:auto;
+
+
+
+    transform:
+    translateY(0)
+    scale(1);
+
+}
+
+
+
+
+
+
+
+button{
+
+
+    border:none;
+
+
+
+    padding:12px 18px;
+
+
+
+    border-radius:20px;
+
+
+
+    color:white;
+
+
+
+    background:
+    rgba(255,255,255,.18);
+
+
+
+    backdrop-filter:
+    blur(15px);
+
+
+
+    cursor:pointer;
+
+
+}
+
+
+
+button:hover{
+
+
+    background:
+    rgba(255,255,255,.3);
+
+}
+
+
+
+
+
+
+/* =====================
+   滑桿
+===================== */
+
+
+.sliderBox{
+
+
+    display:flex;
+
+
+    flex-direction:column;
+
+
+    gap:8px;
+
+}
+
+
+
+input[type="range"]{
+
+
+    width:100%;
+
+}
+
+
+
+
+
+/* 隱藏圖片輸入 */
+
+
+#imageInput{
 
     display:none;
-
-}
-
-
-
-
-/* 手機 */
-
-@media(max-width:600px){
-
-
-#clockCard {
-
-    left:30px;
-
-    top:120px;
-
-    padding:22px 28px;
-
-}
-
-
-
-#time {
-
-    font-size:55px;
-
-}
-
 
 }

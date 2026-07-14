@@ -1,4 +1,3 @@
-
 // =====================
 // 台北時間
 // =====================
@@ -8,7 +7,8 @@ function updateTaipeiTime(){
     const now = new Date();
 
 
-    const time = new Intl.DateTimeFormat(
+    document.getElementById("time").textContent =
+    new Intl.DateTimeFormat(
         "zh-TW",
         {
             timeZone:"Asia/Taipei",
@@ -21,7 +21,8 @@ function updateTaipeiTime(){
 
 
 
-    const date = new Intl.DateTimeFormat(
+    document.getElementById("date").textContent =
+    new Intl.DateTimeFormat(
         "zh-TW",
         {
             timeZone:"Asia/Taipei",
@@ -31,12 +32,6 @@ function updateTaipeiTime(){
             weekday:"long"
         }
     ).format(now);
-
-
-
-    document.getElementById("time").textContent = time;
-
-    document.getElementById("date").textContent = date;
 
 }
 
@@ -48,21 +43,91 @@ setInterval(updateTaipeiTime,1000);
 
 
 
+
 // =====================
-// 背景圖片
+// 元件
 // =====================
+
+
+const card =
+document.getElementById("clockCard");
+
 
 const background =
 document.getElementById("background");
+
+
+const settingsBtn =
+document.getElementById("settingsBtn");
+
+
+const settingsPanel =
+document.getElementById("settingsPanel");
+
+
+const resizeHandle =
+document.getElementById("resizeHandle");
+
+
+
+
+
+// =====================
+// 設定面板
+// =====================
+
+
+settingsBtn.onclick=function(e){
+
+    e.stopPropagation();
+
+    settingsPanel.classList.toggle("show");
+
+};
+
+
+
+document.addEventListener(
+"pointerdown",
+(e)=>{
+
+
+    if(
+        !settingsPanel.contains(e.target)
+        &&
+        !settingsBtn.contains(e.target)
+    ){
+
+        settingsPanel.classList.remove("show");
+
+    }
+
+
+});
+
+
+
+
+
+
+// =====================
+// 背景圖片
+// =====================
 
 
 const imageInput =
 document.getElementById("imageInput");
 
 
+const changeBackground =
+document.getElementById("changeBackground");
 
-const savedImage =
-localStorage.getItem("taipeiWallpaper");
+
+
+let savedImage =
+localStorage.getItem(
+"taipeiWallpaper"
+);
 
 
 
@@ -75,9 +140,7 @@ if(savedImage){
 
 
 
-document
-.getElementById("changeBackground")
-.onclick=function(){
+changeBackground.onclick=function(){
 
     imageInput.click();
 
@@ -87,10 +150,12 @@ document
 
 imageInput.onchange=function(e){
 
+
     const file=e.target.files[0];
 
 
     if(!file)return;
+
 
 
     const reader=new FileReader();
@@ -99,8 +164,10 @@ imageInput.onchange=function(e){
 
     reader.onload=function(){
 
+
         background.style.backgroundImage =
         `url(${reader.result})`;
+
 
 
         localStorage.setItem(
@@ -108,39 +175,39 @@ imageInput.onchange=function(e){
             reader.result
         );
 
+
     };
 
 
+
     reader.readAsDataURL(file);
+
 
 };
 
 
 
 
+
+
+
 // =====================
-// 時間卡拖曳
-// Pointer Events
+// 時間卡移動
 // =====================
 
-const card =
-document.getElementById("clockCard");
+
+let moving=false;
 
 
-let dragging=false;
+let startX;
+let startY;
 
-let startX=0;
-let startY=0;
-
-
-let startLeft=0;
-let startTop=0;
+let startLeft;
+let startTop;
 
 
 
-// 載入之前的位置
-
-const savedPosition =
+let savedPosition =
 JSON.parse(
 localStorage.getItem("clockPosition")
 );
@@ -161,21 +228,25 @@ if(savedPosition){
 
 
 
+
 card.addEventListener(
 "pointerdown",
-function(e){
-
-    dragging=true;
+(e)=>{
 
 
-    card.setPointerCapture(
-        e.pointerId
-    );
+    if(e.target===resizeHandle)
+    return;
+
+
+
+    moving=true;
+
 
 
     startX=e.clientX;
 
     startY=e.clientY;
+
 
 
     startLeft=card.offsetLeft;
@@ -184,60 +255,65 @@ function(e){
 
 
 
-    card.style.transition="none";
-
 });
 
 
 
 
-
-card.addEventListener(
+document.addEventListener(
 "pointermove",
-function(e){
-
-    if(!dragging)return;
+(e)=>{
 
 
-    let newLeft =
-    startLeft + 
-    (e.clientX-startX);
-
-
-
-    let newTop =
-    startTop +
-    (e.clientY-startY);
-
-
-
-    // 限制不要拖出畫面
-
-    newLeft=Math.max(
-        0,
-        Math.min(
-            window.innerWidth-card.offsetWidth,
-            newLeft
-        )
-    );
-
-
-    newTop=Math.max(
-        0,
-        Math.min(
-            window.innerHeight-card.offsetHeight,
-            newTop
-        )
-    );
+    if(!moving)
+    return;
 
 
 
     card.style.left =
-    newLeft+"px";
+    startLeft+
+    e.clientX-startX+
+    "px";
+
 
 
     card.style.top =
-    newTop+"px";
+    startTop+
+    e.clientY-startY+
+    "px";
+
+
+});
+
+
+
+
+
+document.addEventListener(
+"pointerup",
+()=>{
+
+
+    if(moving){
+
+
+        moving=false;
+
+
+
+        localStorage.setItem(
+            "clockPosition",
+            JSON.stringify({
+
+                left:card.offsetLeft,
+
+                top:card.offsetTop
+
+            })
+        );
+
+    }
+
 
 });
 
@@ -246,68 +322,287 @@ function(e){
 
 
 
-card.addEventListener(
+
+// =====================
+// 時間卡縮放
+// =====================
+
+
+let scale =
+Number(
+localStorage.getItem("clockScale")
+)
+||1;
+
+
+
+function updateScale(){
+
+
+    card.style.transform =
+    `scale(${scale})`;
+
+
+}
+
+
+
+updateScale();
+
+
+
+let resizing=false;
+
+
+let resizeStartX;
+
+
+let resizeStartScale;
+
+
+
+
+resizeHandle.addEventListener(
+"pointerdown",
+(e)=>{
+
+
+    resizing=true;
+
+
+    resizeStartX=e.clientX;
+
+
+    resizeStartScale=scale;
+
+
+});
+
+
+
+
+
+document.addEventListener(
+"pointermove",
+(e)=>{
+
+
+    if(!resizing)
+    return;
+
+
+
+    scale =
+    resizeStartScale+
+    (e.clientX-resizeStartX)/200;
+
+
+
+    scale=Math.max(
+        .5,
+        Math.min(
+            2,
+            scale
+        )
+    );
+
+
+
+    updateScale();
+
+
+
+});
+
+
+
+
+
+document.addEventListener(
 "pointerup",
-function(){
-
-    dragging=false;
+()=>{
 
 
-    card.style.transition=
-    "transform .2s ease";
+    if(resizing){
+
+
+        resizing=false;
+
+
+
+        localStorage.setItem(
+            "clockScale",
+            scale
+        );
+
+
+    }
+
+
+});
+
+
+
+
+
+
+
+// =====================
+// 透明度
+// =====================
+
+
+const opacitySlider =
+document.getElementById("opacitySlider");
+
+
+
+let opacity =
+localStorage.getItem("cardOpacity")
+||0.12;
+
+
+
+function updateOpacity(){
+
+
+    card.style.background =
+    `rgba(255,255,255,${opacity})`;
+
+}
+
+
+
+updateOpacity();
+
+
+
+opacitySlider.value=opacity;
+
+
+
+opacitySlider.oninput=function(){
+
+
+    opacity=this.value;
+
+
+    updateOpacity();
 
 
 
     localStorage.setItem(
-        "clockPosition",
-        JSON.stringify({
-
-            left:card.offsetLeft,
-
-            top:card.offsetTop
-
-        })
+        "cardOpacity",
+        opacity
     );
 
-});
-
-
-
-
-// =====================
-// 鎖定位置
-// =====================
-
-let locked=false;
-
-
-document
-.getElementById("lockPosition")
-.onclick=function(){
-
-
-    locked=!locked;
-
-
-
-    this.textContent =
-    locked
-    ? "🔒 已鎖定"
-    : "🔓 鎖定位置";
-
-
-
-    if(locked){
-
-        card.style.pointerEvents="none";
-
-    }
-    else{
-
-        card.style.pointerEvents="auto";
-
-    }
 
 };
 
 
+
+
+
+
+
+// =====================
+// 模糊
+// =====================
+
+
+const blurSlider =
+document.getElementById("blurSlider");
+
+
+
+let blur =
+localStorage.getItem("cardBlur")
+||35;
+
+
+
+function updateBlur(){
+
+
+    card.style.backdropFilter =
+    `blur(${blur}px)`;
+
+
+    card.style.webkitBackdropFilter =
+    `blur(${blur}px)`;
+
+
+}
+
+
+
+updateBlur();
+
+
+
+blurSlider.value=blur;
+
+
+
+blurSlider.oninput=function(){
+
+
+    blur=this.value;
+
+
+    updateBlur();
+
+
+
+    localStorage.setItem(
+        "cardBlur",
+        blur
+    );
+
+
+};
+
+
+
+
+
+
+
+// =====================
+// 全螢幕
+// =====================
+
+
+const fullscreenBtn =
+document.getElementById("fullscreen");
+
+
+
+fullscreenBtn.onclick=function(){
+
+
+    if(!document.fullscreenElement){
+
+
+        document.documentElement.requestFullscreen();
+
+
+        this.textContent=
+        "退出全螢幕";
+
+
+    }
+    else{
+
+
+        document.exitFullscreen();
+
+
+        this.textContent=
+        "全螢幕";
+
+
+    }
+
+
+};
