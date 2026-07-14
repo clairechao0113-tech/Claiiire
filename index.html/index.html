@@ -1,0 +1,62 @@
+```html
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Taipei Clock</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<!-- 背景圖片 -->
+<div id="background"></div>
+
+
+<!-- 時間卡 -->
+<div id="clockCard">
+
+    <div id="city">
+        🇹🇼 台北
+    </div>
+
+    <div id="time">
+        00:00
+    </div>
+
+    <div id="date">
+        2026年1月1日 星期四
+    </div>
+
+</div>
+
+
+<!-- 控制面板 -->
+<div id="controlPanel">
+
+    <button id="changeBackground">
+        🖼 更換背景
+    </button>
+
+    <button id="lockPosition">
+        🔓 鎖定位置
+    </button>
+
+    <input 
+        type="file" 
+        id="imageInput" 
+        accept="image/*"
+    >
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
+```
